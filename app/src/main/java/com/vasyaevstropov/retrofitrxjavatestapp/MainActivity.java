@@ -17,6 +17,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
+//    json downloaded from http://taisondigital.com.ph/testforyou/all-messages
+//    http://pojo.sodhanalibrary.com/
+
 
     RecyclerView rvListContainer;
     MessageAdapter adapter;
@@ -53,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
                         list.add(responseData.getData()[i].getMessage());
                         adapter.notifyDataSetChanged();
                     }
-
                 });
-
-
     }
 }
