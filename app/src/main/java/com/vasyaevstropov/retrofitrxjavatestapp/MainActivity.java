@@ -1,7 +1,9 @@
 package com.vasyaevstropov.retrofitrxjavatestapp;
 
+import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rvListContainer =(RecyclerView)findViewById(R.id.rcView);
+        rvListContainer.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         adapter = new MessageAdapter(list);
         rvListContainer.setAdapter(adapter);
     }
@@ -42,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
         APIService apiService = retrofit.create(APIService.class);
 
         Observable<MessageModel> observable = apiService.getAllMessages();
-        observable.subscribeOn(AndroidSchedulers.mainThread())
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(responseData-> {
                     for (int i = 0; i <responseData.getData().length ; i++) {
                         list.add(responseData.getData()[i].getMessage());
-
+                        adapter.notifyDataSetChanged();
                     }
 
                 });
+
 
     }
 }
