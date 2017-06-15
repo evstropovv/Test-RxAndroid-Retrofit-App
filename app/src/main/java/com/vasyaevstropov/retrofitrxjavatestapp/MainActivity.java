@@ -41,17 +41,17 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())  //add rxjava library
+                .addConverterFactory(GsonConverterFactory.create()) //add gson library
                 .baseUrl("http://taisondigital.com.ph/")
                 .build();
 
-        APIService apiService = retrofit.create(APIService.class);
+        APIService apiService = retrofit.create(APIService.class);  //retrofit create
 
-        Observable<MessageModel> observable = apiService.getAllMessages();
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseData-> {
+        Observable<MessageModel> observable = apiService.getAllMessages(); //request from retrofit
+        observable.subscribeOn(Schedulers.newThread()) //subscribe in new thread
+                .observeOn(AndroidSchedulers.mainThread()) //result in main thread
+                .subscribe(responseData-> { 
                     for (int i = 0; i <responseData.getData().length ; i++) {
                         list.add(responseData.getData()[i].getMessage());
                         adapter.notifyDataSetChanged();
